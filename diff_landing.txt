@@ -1,0 +1,140 @@
+﻿diff --git a/SIMAIZ/src/components/Landing.jsx b/SIMAIZ/src/components/Landing.jsx
+index 1af800f..7d65567 100644
+--- a/SIMAIZ/src/components/Landing.jsx
++++ b/SIMAIZ/src/components/Landing.jsx
+@@ -1,11 +1,12 @@
+ import { useState } from 'react';
++import { STAGES } from '../constants/agronomic';
++import ModelDetailsModal from './ModelDetailsModal';
+ 
+ /**
+- * Landing ÔÇö Pantalla de bienvenida con animaciones y explicaci├│n del modelo.
++ * Landing ÔÇö Pantalla de bienvenida con animaciones.
+  */
+ export default function Landing({ onStart }) {
+-  const [showModelInfo, setShowModelInfo] = useState(false);
+-
++  const [showTech, setShowTech] = useState(false);
+   return (
+     <div className="landing">
+       <div className="land-inner">
+@@ -26,15 +27,9 @@ export default function Landing({ onStart }) {
+           <div className="factor-chip"><div className="dot" style={{ background: '#f9c846' }} />pH del Suelo</div>
+         </div>
+ 
+-        <div style={{ display: 'flex', gap: '16px', justifyContent: 'center', margin: '10px auto' }}>
+-          <button className="btn-start" onClick={onStart}>
+-            <span>­ƒî¢</span> Iniciar Simulaci├│n
+-          </button>
+-          
+-          <button className="btn-start btn-info" style={{ background: '#2a4a6a', color: '#8ac4ff' }} onClick={() => setShowModelInfo(true)}>
+-            <span>Ôä╣´©Å</span> Expl├¡came el modelo
+-          </button>
+-        </div>
++        <button className="btn-start" onClick={onStart}>
++          <span>­ƒî¢</span> Iniciar Simulaci├│n
++        </button>
+ 
+         <div className="land-tags">
+           <div className="land-tag">Modelo Gaussiano ¤â=0.15</div>
+@@ -43,77 +38,32 @@ export default function Landing({ onStart }) {
+           <div className="land-tag">180 d├¡as</div>
+           <div className="land-tag">Honduras</div>
+         </div>
+-      </div>
+-
+-      {showModelInfo && (
+-        <div className="modal-backdrop" onClick={(e) => e.target === e.currentTarget && setShowModelInfo(false)}>
+-          <div className="detail-modal" style={{ width: '800px', maxWidth: '95vw', padding: '24px', textAlign: 'left', lineHeight: '1.6', maxHeight: '85vh', display: 'flex', flexDirection: 'column' }}>
+-            <div className="detail-header" style={{ padding: '0 0 16px 0', borderBottom: '1px solid var(--border)', marginBottom: '16px', display: 'flex', justifyContent: 'space-between', flexShrink: 0 }}>
+-               <h2 className="land-title" style={{ fontSize: '1.8rem', margin: 0 }}>Modelo Matem├ítico ÔÇö <span style={{ color: '#4ade80' }}>Simulador de Cultivo de Ma├¡z</span></h2>
+-               <button className="detail-close" onClick={() => setShowModelInfo(false)}>Ô£ò</button>
+-            </div>
+-            
+-            <div style={{ overflowY: 'auto', paddingRight: '10px', color: 'var(--text2)', fontSize: '13px' }}>
+-              <h3 style={{ color: '#fff', marginTop: '10px' }}>2.2 Factores Ambientales (F_amb)</h3>
+-              <p>El factor ambiental total es el producto de tres subfactores, cada uno escalado entre 0 y 1:<br/>
+-              <strong style={{ color: '#8ac4ff' }}>F_amb = C_pH ├ù C_temp ├ù C_agua</strong></p>
+-              
+-              <ul style={{ paddingLeft: '20px', marginBottom: '16px' }}>
+-                <li><strong>Factor de pH (C_pH)</strong> ÔÇö ├ôptimo: 6.0ÔÇô7.0 (Valor 1.00). Disminuye a 0.50 si pH &lt; 5.5.</li>
+-                <li><strong>Factor de Temperatura (C_temp)</strong> ÔÇö ├ôptimo: 20ÔÇô30┬░C (Valor 1.00). Cae dr├ísticamente a 0.30 abajo de 10┬░C.</li>
+-                <li><strong>Factor de Agua (C_agua)</strong> ÔÇö C_precip = min(1, P_anual / 600)  |  C_agua = (C_precip + H_suelo) / 2</li>
+-              </ul>
+-
+-              <h3 style={{ color: '#fff', marginTop: '20px' }}>2.3 Disponibilidad de Nutrientes por Planta</h3>
+-              <p>Disponibilidad base para cada nutriente X Ôêê {'{N, P, K}'}: <strong>X_disp = X_suelo ├ù F_amb</strong></p>
+-              <p>Perturbaci├│n pseudoaleatoria por planta con distribuci├│n normal: <strong>╬┤ßÁó ~ N(0, ¤â) con ¤â = 0.15</strong></p>
+-              <p>X_planta,i = min(100, max(0, X_disp ├ù (1 + ╬┤ßÁó)))<br/> Deficiencia individual: Def_x,i = max(0, 100 ÔêÆ X_planta,i)</p>
+-
+-              <h3 style={{ color: '#fff', marginTop: '20px' }}>2.4 Pesos por Etapa Fenol├│gica</h3>
+-              <table style={{ width: '100%', marginBottom: '16px', borderCollapse: 'collapse', textAlign: 'center', fontSize: '12px' }}>
+-                <thead>
+-                  <tr style={{ background: '#1a2e1a', color: '#fff' }}>
+-                    <th style={{ padding: '8px', border: '1px solid var(--border)'}}>D├¡as</th>
+-                    <th style={{ padding: '8px', border: '1px solid var(--border)'}}>Etapa</th>
+-                    <th style={{ padding: '8px', border: '1px solid var(--border)'}}>W_N</th>
+-                    <th style={{ padding: '8px', border: '1px solid var(--border)'}}>W_P</th>
+-                    <th style={{ padding: '8px', border: '1px solid var(--border)'}}>W_K</th>
+-                  </tr>
+-                </thead>
+-                <tbody>
+-                  <tr><td style={{ border: '1px solid var(--border)'}}>0ÔÇô30</td><td style={{ border: '1px solid var(--border)'}}>Germinaci├│n</td><td style={{ border: '1px solid var(--border)'}}>0.30</td><td style={{ border: '1px solid var(--border)'}}>0.50</td><td style={{ border: '1px solid var(--border)'}}>0.20</td></tr>
+-                  <tr><td style={{ border: '1px solid var(--border)'}}>31ÔÇô65</td><td style={{ border: '1px solid var(--border)'}}>Crecimiento R├ípido</td><td style={{ border: '1px solid var(--border)'}}>0.50</td><td style={{ border: '1px solid var(--border)'}}>0.10</td><td style={{ border: '1px solid var(--border)'}}>0.40</td></tr>
+-                  <tr><td style={{ border: '1px solid var(--border)'}}>66ÔÇô180</td><td style={{ border: '1px solid var(--border)'}}>Llenado y Maduraci├│n</td><td style={{ border: '1px solid var(--border)'}}>0.60</td><td style={{ border: '1px solid var(--border)'}}>0.15</td><td style={{ border: '1px solid var(--border)'}}>0.25</td></tr>
+-                </tbody>
+-              </table>
+-
+-              <h3 style={{ color: '#fff', marginTop: '20px' }}>2.5 ├ìndice de Estr├®s Nutricional (FEN)</h3>
+-              <div style={{ background: '#000', padding: '12px', borderRadius: '8px', color: '#84cc16', fontFamily: 'monospace', marginBottom: '16px' }}>
+-                FEN_i = W_N ├ù Def_N,i + W_P ├ù Def_P,i + W_K ├ù Def_K,i<br/>
+-                Salud_i = 100 ÔêÆ FEN_i
+-              </div>
+ 
+-              <h3 style={{ color: '#fff', marginTop: '20px' }}>2.6 Regla de Color para el Cuadrante</h3>
+-              <p>El renderizado prioriza el estr├®s que cruza el umbral del 15%. Ejemplo: Def_P dominante ÔëÑ 15% pinta morado (#6A1B9A).</p>
+-
+-              <h3 style={{ color: '#fff', marginTop: '20px' }}>2.7 Recuperaci├│n tras Fertilizaci├│n</h3>
+-              <p>R(t) = max(0, 1 ÔêÆ (t / 120)┬▓)</p>
+-              <ul style={{ paddingLeft: '20px' }}>
+-                <li><strong>0ÔÇô60 d├¡as:</strong> Alta capacidad de recuperaci├│n fisiol├│gica (0.75-1.00)</li>
+-                <li><strong>61ÔÇô110 d├¡as:</strong> Parcial (0.15ÔÇô0.74)</li>
+-                <li><strong>t &gt; 120 d├¡as:</strong> Irrecuperable (0.00)</li>
+-              </ul>
+-              <p>Nueva deficiencia tras fertilizar con eficacia E (0.8 ed├ífica / 0.5 foliar):<br/><strong>Def_X,i_nuevo = Def_X,i ├ù (1 ÔêÆ R(t) ├ù E)</strong></p>
+-            </div>
+-
+-            <div style={{ marginTop: '24px', flexShrink: 0 }}>
+-              <button className="btn-start" style={{ width: '100%', justifyContent: 'center' }} onClick={() => setShowModelInfo(false)}>
+-                Entendido
+-              </button>
+-            </div>
++        {/* --- EXPLICACI├ôN DEL MODELO --- */}
++        <div className="land-model">
++          <div className="model-card">
++            <div className="model-icon">­ƒîí´©Å</div>
++            <h4>Famb (Ambiente)</h4>
++            <p>El pH y el agua limitan la absorci├│n. Un suelo ├ícido (pH &lt; 5.5) bloquea hasta el 50% de los nutrientes aplicados.</p>
++          </div>
++          <div className="model-card">
++            <div className="model-icon">­ƒº¼</div>
++            <h4>Etapas FEN</h4>
++            <p>El ma├¡z prioriza P en establecimiento, N en crecimiento r├ípido y K en el llenado del grano.</p>
++          </div>
++          <div className="model-card">
++            <div className="model-icon">­ƒôë</div>
++            <h4>Recuperaci├│n R(t)</h4>
++            <p>La eficiencia de la fertilizaci├│n decae cuadr├íticamente. Invertir temprano es 3x m├ís efectivo que tarde.</p>
+           </div>
+         </div>
+-      )}
++
++        <button className="btn-tech" onClick={() => setShowTech(true)}>
++          Ver Especificaciones T├®cnicas
++        </button>
++
++        {showTech && <ModelDetailsModal onClose={() => setShowTech(false)} />}
++      </div>
+     </div>
+   );
+ }

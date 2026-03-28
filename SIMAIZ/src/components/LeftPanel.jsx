@@ -8,6 +8,7 @@ import { FERT_TYPES, PESTICIDE_TYPES } from '../constants/agronomic';
  */
 export default function LeftPanel({
   config, setConfig,
+  onGeoChange,
   onApply,
   onFertilize, onPesticide,
   fertNut, setFertNut,
@@ -61,8 +62,8 @@ export default function LeftPanel({
         <HondurasMap
           depto={config.depto}
           municipio={config.municipio}
-          onDeptoChange={(d) => set('depto', d)}
-          onMunicipioChange={(m) => set('municipio', m)}
+          onDeptoChange={(d) => onGeoChange('depto', d)}
+          onMunicipioChange={(m) => onGeoChange('municipio', m)}
         />
       </div>
 

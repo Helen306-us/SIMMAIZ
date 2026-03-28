@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { TICK_DAYS, FERT_TYPES, PESTICIDE_TYPES } from './constants/agronomic';
 import { initPlants, buildSimulation, applyFertilizer, applyPesticide } from './simulation/model';
+import { getClimateData } from './constants/honduras';
 import Landing from './components/Landing';
 import LoadingScreen from './components/LoadingScreen';
 import Header from './components/Header';
@@ -116,7 +117,28 @@ export default function App() {
     setSelectedCell(null);
     setFertEffect('');
     setPestEffect('');
-    setAppState('landing'); // Volver a la pantalla de inicio
+    // setAppState('landing'); // Ya no volvemos a la landing automáticamente
+  };
+
+  const handleGoToLanding = () => {
+    handleReset();
+    setAppState('landing');
+  };
+
+  // ─── Geo Change with Weather Sync ───
+  const handleGeoChange = (type, value) => {
+    setConfig((prev) => {
+      const newConfig = { ...prev, [type]: value };
+      if (type === 'depto') newConfig.municipio = ''; // Reset municipio si cambia depto
+
+      // Sincronización automática de clima
+      const climate = getClimateData(newConfig.depto, newConfig.municipio);
+      return {
+        ...newConfig,
+        temp: climate.T,
+        precip: climate.P_anual,
+      };
+    });
   };
 
   // ─── Auto-play ───
@@ -185,12 +207,14 @@ export default function App() {
         currentDay={currentDay}
         simData={simData}
         onReset={handleReset}
+        onGoToLanding={handleGoToLanding}
       />
 
       <div className="main-layout">
         <LeftPanel
           config={config}
           setConfig={setConfig}
+          onGeoChange={handleGeoChange}
           onApply={applyConfig}
           onFertilize={handleFertilize}
           onPesticide={handlePesticide}
