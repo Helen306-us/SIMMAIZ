@@ -1,28 +1,28 @@
 @import url('https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap');
 
 :root {
-  --bg: #0a0e0a;
-  --bg2: #0f1510;
-  --bg3: #141c13;
-  --panel: #111711;
-  --border: #1e2b1c;
-  --border2: #253423;
-  --accent: #5dde3f;
-  --accent2: #3db824;
-  --accent-dim: #2a6e1a;
-  --text: #d4e8d0;
-  --text2: #8aaa84;
-  --text3: #506050;
-  --yellow: #f9c846;
-  --purple: #a855f7;
-  --orange: #f97316;
+  --bg: #14161a;
+  --bg2: #191c20;
+  --bg3: #1b1f24;
+  --panel: #22262d;
+  --border: rgba(255, 255, 255, 0.05);
+  --border2: rgba(255, 255, 255, 0.1);
+  --accent: #27ae60;
+  --accent2: #2196f3;
+  --accent-dim: rgba(39, 174, 96, 0.2);
+  --text: #f0f2f5;
+  --text2: #8b949e;
+  --text3: #6e7681;
+  --yellow: #f2c94c;
+  --purple: #ba68c8;
+  --orange: #ffb74d;
   --gray: #607D8B;
-  --red: #ef4444;
-  --healthy: #1a7a1a;
-  --healthy-light: #22a022;
+  --red: #f44336;
+  --healthy: #4caf50;
+  --healthy-light: #81c784;
   --mono: 'Space Mono', monospace;
-  --sans: 'DM Sans', sans-serif;
-  --display: 'Syne', sans-serif;
+  --sans: 'Inter', 'DM Sans', sans-serif;
+  --display: 'Inter', 'Syne', sans-serif;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
