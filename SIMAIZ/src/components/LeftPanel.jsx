@@ -56,6 +56,8 @@ export default function LeftPanel({
           onChange={(v) => set('precip', v)} tooltip="Requerimiento mínimo: ~600mm" />
       </div>
 
+
+      {/* Plagas */}
       {/* Geográfico */}
       <div className="s-section">
         <HondurasMap
@@ -66,7 +68,6 @@ export default function LeftPanel({
         />
       </div>
 
-      {/* Plagas */}
       <div className="s-section">
         <div className="s-label">Plaga (riesgo)</div>
         <SliderInput label="Probabilidad" value={config.plagaProb} min={0} max={30}

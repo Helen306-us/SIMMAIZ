@@ -11,47 +11,6 @@ export default function HondurasMap({ depto, municipio, onDeptoChange, onMunicip
     <div className="geo-section">
       <div className="r-title">Disposición Geográfica</div>
 
-      {/* SVG Map */}
-      <div className="geo-map">
-        <svg width="100%" height="100%" viewBox="0 0 240 90" style={{ display: 'block' }}>
-          {/* Honduras simplified shape */}
-          <polygon
-            points="20,45 40,25 80,20 120,30 160,28 200,35 220,50 210,65 180,70 140,65 100,60 60,65 30,60"
-            fill="#1a3010"
-            stroke="#2a4a20"
-            strokeWidth="1"
-          />
-          <polygon
-            points="40,25 80,20 120,30 160,28 200,35 220,50 210,65 180,70 140,65 100,60 60,65 30,60 20,45"
-            fill="none"
-            stroke="#3a6030"
-            strokeWidth="0.5"
-          />
-          {/* Location dot */}
-          {deptData && (
-            <>
-              <circle
-                cx={deptData.coords.x}
-                cy={deptData.coords.y}
-                r="4"
-                fill="#5dde3f"
-                opacity="0.9"
-              />
-              <circle
-                cx={deptData.coords.x}
-                cy={deptData.coords.y}
-                r="7"
-                fill="none"
-                stroke="#5dde3f"
-                strokeWidth="1.5"
-                opacity="0.5"
-                className="geo-pulse"
-              />
-            </>
-          )}
-        </svg>
-      </div>
-
       {/* Selectors */}
       <div className="geo-selectors">
         <div className="s-row">

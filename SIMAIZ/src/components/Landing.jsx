@@ -1,9 +1,12 @@
+import { useState } from 'react';
 import { STAGES } from '../constants/agronomic';
+import ModelDetailsModal from './ModelDetailsModal';
 
 /**
  * Landing — Pantalla de bienvenida con animaciones.
  */
 export default function Landing({ onStart }) {
+  const [showTech, setShowTech] = useState(false);
   return (
     <div className="landing">
       <div className="land-inner">
@@ -35,6 +38,31 @@ export default function Landing({ onStart }) {
           <div className="land-tag">180 días</div>
           <div className="land-tag">Honduras</div>
         </div>
+
+        {/* --- EXPLICACIÓN DEL MODELO --- */}
+        <div className="land-model">
+          <div className="model-card">
+            <div className="model-icon">🌡️</div>
+            <h4>Famb (Ambiente)</h4>
+            <p>El pH y el agua limitan la absorción. Un suelo ácido (pH &lt; 5.5) bloquea hasta el 50% de los nutrientes aplicados.</p>
+          </div>
+          <div className="model-card">
+            <div className="model-icon">🧬</div>
+            <h4>Etapas FEN</h4>
+            <p>El maíz prioriza P en establecimiento, N en crecimiento rápido y K en el llenado del grano.</p>
+          </div>
+          <div className="model-card">
+            <div className="model-icon">📉</div>
+            <h4>Recuperación R(t)</h4>
+            <p>La eficiencia de la fertilización decae cuadráticamente. Invertir temprano es 3x más efectivo que tarde.</p>
+          </div>
+        </div>
+
+        <button className="btn-tech" onClick={() => setShowTech(true)}>
+          Ver Especificaciones Técnicas
+        </button>
+
+        {showTech && <ModelDetailsModal onClose={() => setShowTech(false)} />}
       </div>
     </div>
   );
