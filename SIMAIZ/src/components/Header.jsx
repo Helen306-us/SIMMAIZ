@@ -29,6 +29,7 @@ export default function Header({ currentDay, simData, onReset }) {
         <div className="day-display">
           Día: <strong>{currentDay}</strong> / 180
         </div>
+        <button className="btn-sm" style={{ borderColor: 'var(--red)', color: 'var(--red)' }} onClick={onReset}>🔙 Volver al Inicio</button>
         <button className="btn-sm" onClick={onReset}>↺ Reiniciar</button>
       </div>
     </div>

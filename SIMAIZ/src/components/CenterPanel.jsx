@@ -52,7 +52,7 @@ export default function CenterPanel({
                   onClick={() => onCellClick(i)}
                   title={`P${i + 1} · Salud: ${cell.salud.toFixed(0)}%`}
                 >
-                  <CornIcon health={cell.salud} state={state} size={40} />
+                  <CornIcon health={cell.salud} state={state} size={40} day={currentDay} />
                 </div>
               );
             })}
