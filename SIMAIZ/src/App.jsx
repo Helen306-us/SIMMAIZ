@@ -85,6 +85,16 @@ export default function App() {
     rebuildSim();
   };
 
+  const handleDirectFertilize = (nut) => {
+    if (!plantData) return;
+    const eff = 0.8; // Suelo
+    const result = applyFertilizer(plantData.plants, currentDay, nut, eff);
+    setFertEffect(
+      `Aplicación de emergencia R(${currentDay})=${result.Rt.toFixed(2)} → Reducción div. ${(result.reduccion * 100).toFixed(0)}% de ${nut}`
+    );
+    rebuildSim();
+  };
+
   // ─── Pesticide ───
   const handlePesticide = () => {
     if (!plantData) return;
@@ -106,6 +116,7 @@ export default function App() {
     setSelectedCell(null);
     setFertEffect('');
     setPestEffect('');
+    setAppState('landing'); // Volver a la pantalla de inicio
   };
 
   // ─── Auto-play ───
@@ -222,6 +233,7 @@ export default function App() {
           currentDay={currentDay}
           cols={simData?.cols || 1}
           onClose={() => { setDetailCell(null); setSelectedCell(null); }}
+          onDirectFertilize={handleDirectFertilize}
         />
       )}
     </div>
