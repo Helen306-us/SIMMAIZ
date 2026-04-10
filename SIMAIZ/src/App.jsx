@@ -19,6 +19,9 @@ export default function App() {
   // ─── App State ───
   const [appState, setAppState] = useState('landing'); // 'landing' | 'loading' | 'simulator'
 
+  // ─── Roboflow API Key ───
+  const ROBOFLOW_API_KEY = '9Y0JlZ8NmbMLpo4Qcui1'; // ← Reemplaza con tu API key de Roboflow
+
   // ─── Config ───
   const [config, setConfig] = useState({
     largo: 80, ancho: 80, parcela: 64, densidad: 75,
@@ -106,6 +109,11 @@ export default function App() {
     );
     rebuildSim();
   };
+
+  // ─── DeficiencyScanner → update N, P, K soil values ───
+  const handleScannerDetected = useCallback(({ N_soil, P_soil, K_soil }) => {
+    setConfig((prev) => ({ ...prev, N: N_soil, P: P_soil, K: K_soil }));
+  }, []);
 
   // ─── Reset ───
   const handleReset = () => {
@@ -223,6 +231,8 @@ export default function App() {
           pestType={pestType} setPestType={setPestType}
           fertEffect={fertEffect}
           pestEffect={pestEffect}
+          onScannerDetected={handleScannerDetected}
+          scannerApiKey={ROBOFLOW_API_KEY}
         />
 
         <CenterPanel

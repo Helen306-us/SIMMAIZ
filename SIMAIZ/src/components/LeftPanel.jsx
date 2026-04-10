@@ -1,6 +1,7 @@
 import SliderInput from './SliderInput';
 import HondurasMap from './HondurasMap';
 import { FERT_TYPES, PESTICIDE_TYPES } from '../constants/agronomic';
+import DeficiencyScanner from './DeficiencyScanner';
 
 /**
  * LeftPanel — Sidebar de configuración con terreno, nutrientes, clima,
@@ -15,6 +16,8 @@ export default function LeftPanel({
   fertType, setFertType,
   pestType, setPestType,
   fertEffect, pestEffect,
+  onScannerDetected,
+  scannerApiKey,
 }) {
   const set = (key, val) => setConfig((c) => ({ ...c, [key]: val }));
 
@@ -119,6 +122,15 @@ export default function LeftPanel({
         {pestEffect && (
           <div className="fert-effect">{pestEffect}</div>
         )}
+      </div>
+
+      {/* Análisis IA */}
+      <div className="s-section">
+        <div className="s-label">Análisis con IA 🤖</div>
+        <DeficiencyScanner
+          apiKey={scannerApiKey}
+          onDeficiencyDetected={onScannerDetected}
+        />
       </div>
 
       {/* Botón principal */}
