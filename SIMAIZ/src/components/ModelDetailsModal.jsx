@@ -100,6 +100,17 @@ export default function ModelDetailsModal({ onClose }) {
             <p className="tech-note">Donde σ = 0.15 (15% de varianza espacial).</p>
           </section>
         </div>
+        <div className="detail-footer" style={{ marginTop: '24px', textAlign: 'center', padding: '0 24px 24px' }}>
+          <a
+            href="/Guia_Modelo_Matematico.pdf"
+            download="Guia_Modelo_Matematico_SimMaiz.pdf"
+            className="action-btn"
+            style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '12px 24px', backgroundColor: '#3b82f6', color: 'white', textDecoration: 'none', borderRadius: '8px', fontWeight: 'bold' }}
+          >
+            <span style={{ fontSize: '1.2em' }}></span>
+            Descargar PDF de Documentación
+          </a>
+        </div>
       </div>
     </div>
   );

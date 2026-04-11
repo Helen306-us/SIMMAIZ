@@ -126,7 +126,7 @@ export default function LeftPanel({
 
       {/* Análisis IA */}
       <div className="s-section">
-        <div className="s-label">Análisis con IA 🤖</div>
+        <div className="s-label">Análisis con IA</div>
         <DeficiencyScanner
           apiKey={scannerApiKey}
           onDeficiencyDetected={onScannerDetected}

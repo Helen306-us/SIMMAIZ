@@ -270,7 +270,7 @@ export default function DeficiencyScanner({ apiKey, onDeficiencyDetected }) {
       }
 
       const result = await response.json();
-      
+
       // Workflow API might return 200 OK but with an internal schema error
       if (result && result.error_type) {
         throw new Error(`Error Interno de IA: ${result.message || result.error_type}`);
@@ -443,7 +443,7 @@ export default function DeficiencyScanner({ apiKey, onDeficiencyDetected }) {
                       Analizando...
                     </>
                   ) : (
-                    <>🧬 Analizar con IA</>
+                    <>Analizar con IA</>
                   )}
                 </button>
 
