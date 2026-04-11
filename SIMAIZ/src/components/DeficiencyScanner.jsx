@@ -14,7 +14,7 @@ const DEFICIENCY_CONFIG = {
     icon: '🌿',
     nutrient: null,
   },
-  'nitrogen_deficiency': {
+  'Nitrogen Deficiency': {
     label: 'Deficiencia de Nitrógeno',
     color: '#fbbf24',
     bg: 'rgba(251, 191, 36, 0.12)',
@@ -22,7 +22,7 @@ const DEFICIENCY_CONFIG = {
     icon: '🟡',
     nutrient: 'N',
   },
-  'Phosphorus-Deficient': {
+  'Phosphorus Deficiency': {
     label: 'Deficiencia de Fósforo',
     color: '#a855f7',
     bg: 'rgba(168, 85, 247, 0.12)',
@@ -30,7 +30,7 @@ const DEFICIENCY_CONFIG = {
     icon: '🟣',
     nutrient: 'P',
   },
-  'Potassium-Deficient': {
+  'Potassium Deficiency': {
     label: 'Deficiencia de Potasio',
     color: '#f97316',
     bg: 'rgba(249, 115, 22, 0.12)',
@@ -134,8 +134,8 @@ function PredictionCard({ pred, soilLevel }) {
 function SoilPreview({ values }) {
   const items = [
     { key: 'N_soil', label: 'Nitrógeno (N)', color: '#4ade80' },
-    { key: 'P_soil', label: 'Fósforo (P)',   color: '#a855f7' },
-    { key: 'K_soil', label: 'Potasio (K)',   color: '#fb923c' },
+    { key: 'P_soil', label: 'Fósforo (P)', color: '#a855f7' },
+    { key: 'K_soil', label: 'Potasio (K)', color: '#fb923c' },
   ];
 
   return (
@@ -215,9 +215,9 @@ export default function DeficiencyScanner({ apiKey, onDeficiencyDetected }) {
   }, []);
 
   // ── Drag & Drop ──
-  const handleDragOver  = (e) => { e.preventDefault(); setIsDragging(true); };
-  const handleDragLeave = ()  => setIsDragging(false);
-  const handleDrop      = (e) => {
+  const handleDragOver = (e) => { e.preventDefault(); setIsDragging(true); };
+  const handleDragLeave = () => setIsDragging(false);
+  const handleDrop = (e) => {
     e.preventDefault();
     setIsDragging(false);
     const file = e.dataTransfer.files[0];
@@ -233,7 +233,7 @@ export default function DeficiencyScanner({ apiKey, onDeficiencyDetected }) {
   const fileToBase64 = (file) =>
     new Promise((resolve, reject) => {
       const reader = new FileReader();
-      reader.onload  = () => resolve(reader.result.split(',')[1]); // strip data:...;base64,
+      reader.onload = () => resolve(reader.result.split(',')[1]); // Prefix must be stripped for correct transmission
       reader.onerror = reject;
       reader.readAsDataURL(file);
     });
@@ -251,11 +251,16 @@ export default function DeficiencyScanner({ apiKey, onDeficiencyDetected }) {
       const base64Image = await fileToBase64(imageFile);
 
       const response = await fetch(
-        `https://detect.roboflow.com/maize-deficiency-scanner-grubh/1?api_key=${apiKey}`,
+        `https://serverless.roboflow.com/helens-workspaceteoria/workflows/detect-and-classify-2?api_key=${apiKey}`,
         {
-            method: 'POST',
-            body: base64Image,
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            api_key: apiKey,
+            inputs: {
+              "image": { "type": "base64", "value": base64Image }
+            }
+          })
         }
       );
 
@@ -265,11 +270,37 @@ export default function DeficiencyScanner({ apiKey, onDeficiencyDetected }) {
       }
 
       const result = await response.json();
+      
+      // Workflow API might return 200 OK but with an internal schema error
+      if (result && result.error_type) {
+        throw new Error(`Error Interno de IA: ${result.message || result.error_type}`);
+      }
 
       let preds = [];
-      if (result.predictions && Array.isArray(result.predictions)) {
-        preds = result.predictions;
-      }
+      const findPreds = (obj) => {
+        if (!obj) return;
+        if (Array.isArray(obj)) {
+          obj.forEach(item => {
+            if (item && item.class && item.confidence !== undefined) {
+              item.confidence = Number(item.confidence);
+              preds.push(item);
+            } else if (item && item.top && item.confidence !== undefined) {
+              preds.push({ class: item.top, confidence: Number(item.confidence) });
+            } else {
+              findPreds(item);
+            }
+          });
+        } else if (typeof obj === 'object') {
+          for (const key in obj) {
+            if (key !== 'class' && obj[key] && obj[key].confidence !== undefined && !obj[key].class) {
+              preds.push({ class: key, confidence: Number(obj[key].confidence) });
+            }
+            findPreds(obj[key]);
+          }
+        }
+      };
+
+      findPreds(result);
 
       const dedupMap = {};
       preds.forEach(p => {
@@ -277,6 +308,15 @@ export default function DeficiencyScanner({ apiKey, onDeficiencyDetected }) {
           dedupMap[p.class] = p;
       });
       const deduped = Object.values(dedupMap).sort((a, b) => b.confidence - a.confidence);
+
+      if (deduped.length === 0) {
+        // Strip visualization from JSON so we can actually see the predictions structure!
+        const clone = JSON.parse(JSON.stringify(result));
+        if (clone.outputs && clone.outputs[0] && clone.outputs[0].visualization) {
+          clone.outputs[0].visualization = "[BASE64_OMITTED]";
+        }
+        throw new Error("Roboflow JSON: " + JSON.stringify(clone).substring(0, 800));
+      }
 
       setPredictions(deduped);
       setSoilValues(mapRoboflowResultsToSoilValues(deduped));
@@ -525,7 +565,7 @@ export default function DeficiencyScanner({ apiKey, onDeficiencyDetected }) {
             </div>
           </div>
         </div>
-      , document.body)}
+        , document.body)}
     </>
   );
 }

@@ -17,10 +17,10 @@ import './App.css';
  */
 export default function App() {
   // ─── App State ───
-  const [appState, setAppState] = useState('landing'); // 'landing' | 'loading' | 'simulator'
+  const [appState, setAppState] = useState('landing');
 
   // ─── Roboflow API Key ───
-  const ROBOFLOW_API_KEY = '9Y0JlZ8NmbMLpo4Qcui1'; // ← Reemplaza con tu API key de Roboflow
+  const ROBOFLOW_API_KEY = '9Y0JlZ8NmbMLpo4Qcui1';
 
   // ─── Config ───
   const [config, setConfig] = useState({
