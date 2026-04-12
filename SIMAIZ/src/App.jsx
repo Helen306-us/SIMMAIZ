@@ -11,10 +11,7 @@ import RightPanel from './components/RightPanel';
 import PlantDetailModal from './components/PlantDetailModal';
 import './App.css';
 
-/**
- * App — Componente principal del simulador SimMaíz.
- * Maneja el flow: Landing → Loading → Simulator
- */
+
 export default function App() {
   // ─── App State ───
   const [appState, setAppState] = useState('landing');
