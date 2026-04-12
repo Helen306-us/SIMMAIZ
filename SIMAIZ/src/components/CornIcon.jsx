@@ -1,7 +1,4 @@
-/**
- * CornIcon — SVG estilizado de planta de maíz para las celdas.
- * Cambia de apariencia según el estado de salud y el día de simulación (crecimiento).
- */
+
 export default function CornIcon({ health, state, size = 28, day = 180 }) {
   // Lógica de crecimiento fenológico
   // progress va de 0.2 (brote) a 1.0 (adulto) a los 90 días
