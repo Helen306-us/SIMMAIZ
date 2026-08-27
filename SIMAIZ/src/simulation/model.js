@@ -304,7 +304,7 @@ export function applyPesticide(plants, day, pesticideEficacia) {
 }
 
 // ─────────────────────────────────────────────
-//  DIAGNÓSTICO INTELIGENTE
+//  DIAGNÓSTICO DEL CULTIVO
 // ─────────────────────────────────────────────
 
 export function getDiagnosis(stats, config, Famb) {

@@ -99,7 +99,7 @@ export default function LeftPanel({
             >{val.label} ({val.eficiencia})</div>
           ))}
         </div>
-        <button className="apply-btn" onClick={onFertilize}>⚗ Aplicar Fertilizante</button>
+        <button className="apply-btn" onClick={onFertilize}>Aplicar Fertilizante</button>
         {fertEffect && (
           <div className="fert-effect">{fertEffect}</div>
         )}
@@ -118,7 +118,7 @@ export default function LeftPanel({
             >{val.label} ({val.eficacia})</div>
           ))}
         </div>
-        <button className="apply-btn pesticide-btn" onClick={onPesticide}>🛡 Aplicar Plaguicida</button>
+        <button className="apply-btn pesticide-btn" onClick={onPesticide}>Aplicar Plaguicida</button>
         {pestEffect && (
           <div className="fert-effect">{pestEffect}</div>
         )}
@@ -136,7 +136,7 @@ export default function LeftPanel({
       {/* Botón principal */}
       <div className="s-section">
         <button className="apply-btn primary-apply" onClick={onApply}>
-          ▶ Aplicar Configuración
+          Aplicar Configuración
         </button>
       </div>
     </div>

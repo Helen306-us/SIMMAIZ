@@ -34,7 +34,7 @@ export default function Header({ currentDay, simData, onReset, onGoToLanding }) 
           style={{ borderColor: 'var(--red)', color: 'var(--red)' }}
           onClick={onGoToLanding}
         >
-          🔙 Volver al Inicio
+          Volver al Inicio
         </button>
         <button className="btn-sm" onClick={onReset}>
           ↺ Reiniciar
