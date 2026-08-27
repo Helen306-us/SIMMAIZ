@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { TICK_DAYS, FERT_TYPES, PESTICIDE_TYPES } from './constants/agronomic';
 import { initPlants, buildSimulation, applyFertilizer, applyPesticide } from './simulation/model';
+import { getClimateData } from './constants/honduras';
 import Landing from './components/Landing';
 import LoadingScreen from './components/LoadingScreen';
 import Header from './components/Header';
@@ -10,13 +11,13 @@ import RightPanel from './components/RightPanel';
 import PlantDetailModal from './components/PlantDetailModal';
 import './App.css';
 
-/**
- * App — Componente principal del simulador SimMaíz.
- * Maneja el flow: Landing → Loading → Simulator
- */
+
 export default function App() {
   // ─── App State ───
-  const [appState, setAppState] = useState('landing'); // 'landing' | 'loading' | 'simulator'
+  const [appState, setAppState] = useState('landing');
+
+  // ─── Roboflow API Key ───
+  const ROBOFLOW_API_KEY = '9Y0JlZ8NmbMLpo4Qcui1';
 
   // ─── Config ───
   const [config, setConfig] = useState({
@@ -106,6 +107,11 @@ export default function App() {
     rebuildSim();
   };
 
+  // ─── DeficiencyScanner → update N, P, K soil values ───
+  const handleScannerDetected = useCallback(({ N_soil, P_soil, K_soil }) => {
+    setConfig((prev) => ({ ...prev, N: N_soil, P: P_soil, K: K_soil }));
+  }, []);
+
   // ─── Reset ───
   const handleReset = () => {
     clearInterval(intervalRef.current);
@@ -116,7 +122,28 @@ export default function App() {
     setSelectedCell(null);
     setFertEffect('');
     setPestEffect('');
-    setAppState('landing'); // Volver a la pantalla de inicio
+    // setAppState('landing'); // Ya no volvemos a la landing automáticamente
+  };
+
+  const handleGoToLanding = () => {
+    handleReset();
+    setAppState('landing');
+  };
+
+  // ─── Geo Change with Weather Sync ───
+  const handleGeoChange = (type, value) => {
+    setConfig((prev) => {
+      const newConfig = { ...prev, [type]: value };
+      if (type === 'depto') newConfig.municipio = ''; // Reset municipio si cambia depto
+
+      // Sincronización automática de clima
+      const climate = getClimateData(newConfig.depto, newConfig.municipio);
+      return {
+        ...newConfig,
+        temp: climate.T,
+        precip: climate.P_anual,
+      };
+    });
   };
 
   // ─── Auto-play ───
@@ -185,12 +212,14 @@ export default function App() {
         currentDay={currentDay}
         simData={simData}
         onReset={handleReset}
+        onGoToLanding={handleGoToLanding}
       />
 
       <div className="main-layout">
         <LeftPanel
           config={config}
           setConfig={setConfig}
+          onGeoChange={handleGeoChange}
           onApply={applyConfig}
           onFertilize={handleFertilize}
           onPesticide={handlePesticide}
@@ -199,6 +228,8 @@ export default function App() {
           pestType={pestType} setPestType={setPestType}
           fertEffect={fertEffect}
           pestEffect={pestEffect}
+          onScannerDetected={handleScannerDetected}
+          scannerApiKey={ROBOFLOW_API_KEY}
         />
 
         <CenterPanel

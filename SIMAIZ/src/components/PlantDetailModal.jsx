@@ -1,11 +1,7 @@
 import { getPlantImage, getQuality, getCellState } from '../simulation/model';
 import leafCompImg from '../assets/images/leaf_comparison.png';
 
-/**
- * PlantDetailModal — Modal con detalle completo de planta en formato Dashboard
- * Combina imagen realista, guía fotográfica, barra de estado y los "tips" originales, 
- * junto con la posibilidad de aplicar un fertilizante de rescate directamente si está pausado.
- */
+
 export default function PlantDetailModal({ cell, plantIndex, currentDay, cols, onClose, onDirectFertilize }) {
   if (!cell) return null;
 
